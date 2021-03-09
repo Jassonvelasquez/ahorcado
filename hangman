@@ -1,0 +1,35 @@
+#! /bin/bash
+
+
+setup_tui () {
+    #   Setup the terminal for the TUI.
+    #   '\e[?1049h': Use alternative screen buffer.
+    #   '\e[?7l':    Disable line wrapping.
+    #   '\e[1;Nr':   Limit scrolling to scrolling area.
+    #                Also sets cursor to (0,0).
+
+    printf '\e[?1049h\e[?7l\e[1;%sr'
+
+    #   Hide user input.
+    stty -echo
+    trap reset_term EXIT
+}
+
+
+reset_term () {
+    #   Reset the terminal to a useable state (undo all changes).
+    #   '\e[?7h':   Re-enable line wrapping.
+    #   '\e[2J':    Clear the terminal.
+    #   '\e[;r':    Set the scroll region to its default value.
+    #               Also sets cursor to (0,0).
+    #   '\e[?1049l: Restore main screen buffer.
+
+    printf '\e[?7h\e[2J\e[;r\e[?1049l'
+
+    #   Show user input.
+    stty echo
+}
+
+
+setup_tui
+while read -n 1 c; do echo "$c"; done | ./engine

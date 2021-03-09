@@ -1,1 +1,2 @@
-# ideal-train
+# hangman
+A silly game in C++
